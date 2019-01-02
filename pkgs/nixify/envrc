@@ -136,7 +136,8 @@ validateVersion() {
 	local patch="$(echo "${version}" | cut -d. -f3)"
 
 	if [[ "${major}" -gt 2 ]]; then return 0; fi
-	if [[ "${major}" -eq 2 ]] && [[ "${minor}" -ge 18 ]] && [[ "${patch}" -ge 2 ]]; then return 0; fi
+	if [[ "${major}" -eq 2 ]] && [[ "${minor}" -gt 18 ]]; then return 0; fi
+	if [[ "${major}" -eq 2 ]] && [[ "${minor}" -eq 18 ]] && [[ "${patch}" -ge 2 ]]; then return 0; fi
 	return 1
 }
 
