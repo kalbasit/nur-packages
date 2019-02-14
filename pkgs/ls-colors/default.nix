@@ -1,7 +1,7 @@
 { stdenvNoCC, fetchFromGitHub }:
 
 stdenvNoCC.mkDerivation rec {
-  name = "lscolors-${version}";
+  name = "lscolors-unstable-${version}";
   version = "2019-02-01";
 
   src = fetchFromGitHub {
