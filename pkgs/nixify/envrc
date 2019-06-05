@@ -1,11 +1,16 @@
 # Load environment variables from `nix-shell` and export it out.
 #
-# Usage: use_nix -s <nix-expression> [-w path] [-w path] ...
+# Usage: use_nix [-s <nix-expression>] [-w <path>] [-w <path>] ...
 #   -s nix-expression: The nix expression to use for building the shell environment.
 #   -w path: watch a file for changes. It can be specified multiple times. The
 #      shell specified with -s is automatically watched.
 #
-# Example: use_nix -s shell.nix -w .nixpkgs-version.json
+#   If no nix-expression were given with -s, it will attempt to find and load
+#   the shell using the following files in order: shell.nix and default.nix.
+#
+# Example:
+#   -  use_nix
+#   -  use_nix -s shell.nix -w .nixpkgs-version.json
 #
 # The dependencies pulled by nix-shell are added to Nix's garbage collector
 # roots, such that the environment remains persistent.
@@ -48,7 +53,15 @@ use_nix() {
 	shift $((OPTIND -1))
 
 	if [[ -z "${shell}" ]]; then
-		fail "ERR: no shell was given"
+		if [[ -f shell.nix ]]; then
+			shell=shell.nix
+			files_to_watch=("${files_to_watch[@]}" shell.nix)
+		elif [[ -f default.nix ]]; then
+			shell=default.nix
+			files_to_watch=("${files_to_watch[@]}" default.nix)
+		else
+			fail "ERR: no shell was given"
+		fi
 	fi
 
 	local f
