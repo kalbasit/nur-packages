@@ -27,10 +27,7 @@ use_nix() {
 	local shell
 	local files_to_watch=()
 
-	# XXX: These are required so getopts in one function call does not affect the
-	# same call in another function.
-	local opt OPTARG OPTIND
-
+	local opt OPTARG OPTIND # define vars used by getopts locally
 	while getopts ":n:s:w:" opt; do
 		case "${opt}" in
 			s)
@@ -74,10 +71,6 @@ use_nix() {
 	if [[ ! -f "${drv}" ]]; then
 		mkdir -p "${wd}"
 
-		# XXX: Once https://github.com/cachix/cachix/issues/189 is resolved,
-		# replace the hardcoded `--option binary-caches` and `--option
-		# trusted-public-keys` with whatever API they deliver.
-
 		log_status "use nix: deriving new environment"
 		IN_NIX_SHELL=1 nix-instantiate --add-root "${drv}" --indirect "${shell}" > /dev/null
 		nix-store -r $(nix-store --query --references "${drv}") --add-root "${wd}/dep" --indirect > /dev/null
@@ -87,8 +80,7 @@ use_nix() {
 		fi
 
 		log_status "use nix: updating cache"
-		nix-shell --pure "${drv}" \
-			--show-trace --run "$(join_args "$direnv" dump bash)" > "${dump}"
+		nix-shell --pure "${drv}" --show-trace --run "$(join_args "$direnv" dump bash)" > "${dump}"
 		if [[ "${?}" -ne 0 ]] || [[ ! -f "${dump}" ]] || ! grep -q IN_NIX_SHELL "${dump}"; then
 			rm -rf "${wd}"
 			fail "use nix: was not able to update the cache of the environment. Please run 'direnv reload' to try again."
