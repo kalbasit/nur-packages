@@ -13,6 +13,8 @@ buildGoModule rec {
 
   modSha256 = "1hx16v44bvjxrb6m0m065ac9igv8vh8rj1mhzsiyxnnipkcgm0p0";
 
+  buildFlagsArray = [ "-ldflags=" "-X=main.version=${version}" ];
+
   meta = with stdenv.lib; {
     homepage = "https://github.com/kalbasit/swm";
     description = "swm (Story-based Workflow Manager) is a Tmux session manager specifically designed for Story-based development workflow";
