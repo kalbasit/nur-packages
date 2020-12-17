@@ -15,7 +15,7 @@ matrix:
 
 install:
  - nix --version
- - echo "trusted-users = root travis" | sudo tee -r /etc/nix/nix.conf
+ - echo "trusted-users = root travis" | sudo tee -a /etc/nix/nix.conf
  - sudo pkill nix-daemon
  - if [ -n "${CACHIX_CACHE}" ]; then travis_retry nix-channel --update; fi
  - if [ -n "${CACHIX_CACHE}" ]; then nix-env -i cachix; fi
