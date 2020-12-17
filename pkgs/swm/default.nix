@@ -1,21 +1,50 @@
-{ stdenv, buildGoModule, fetchFromGitHub }:
+{ buildGoModule
+, fetchFromGitHub
+, fzf
+, git
+, installShellFiles
+, lib
+, tmux
+, procps
+}:
 
 buildGoModule rec {
   pname = "swm";
-  version = "0.3.0";
+  version = "0.4.0-alpha4";
 
   src = fetchFromGitHub {
     owner = "kalbasit";
     repo = "swm";
     rev = "v${version}";
-    sha256 = "1f72sgh4l76s5n9ah26b5716j2qjprii5g7svhs0gmf106277air";
+    sha256 = "sha256-YpZSz7+Smiml1L+rSps0h1V81EdCDFlktObZkmKqPhc=";
   };
 
-  modSha256 = "1hx16v44bvjxrb6m0m065ac9igv8vh8rj1mhzsiyxnnipkcgm0p0";
+  vendorSha256 = null;
 
-  buildFlagsArray = [ "-ldflags=" "-X=main.version=${version}" ];
+  buildFlagsArray = [ "-ldflags=" "-X=github.com/kalbasit/swm/cmd.version=${version}" ];
 
-  meta = with stdenv.lib; {
+  nativeBuildInputs = [ fzf git tmux procps installShellFiles ];
+
+  postInstall = ''
+    for shell in bash zsh fish; do
+      $out/bin/swm auto-complete $shell > swm.$shell
+      installShellCompletion swm.$shell
+    done
+
+    $out/bin/swm gen-doc man --path ./man
+    installManPage man/*.7
+  '';
+
+  doCheck = true;
+  preCheck = ''
+    export HOME=$NIX_BUILD_TOP/home
+    mkdir -p $HOME
+
+    git config --global user.email "nix-test@example.com"
+    git config --global user.name "Nix Test"
+  '';
+
+  meta = with lib; {
     homepage = "https://github.com/kalbasit/swm";
     description = "swm (Story-based Workflow Manager) is a Tmux session manager specifically designed for Story-based development workflow";
     license = licenses.mit;
