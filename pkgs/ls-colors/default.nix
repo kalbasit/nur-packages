@@ -1,4 +1,4 @@
-{ stdenvNoCC, fetchFromGitHub }:
+{ stdenvNoCC, fetchFromGitHub, lib }:
 
 stdenvNoCC.mkDerivation rec {
   name = "lscolors-unstable-${version}";
@@ -21,7 +21,7 @@ stdenvNoCC.mkDerivation rec {
     mv bourne-shell.sh c-shell.sh $out/ls-colors/
   '';
 
-  meta = with stdenvNoCC.lib; {
+  meta = with lib; {
     description = "A collection of LS_COLORS definitions; needs your contribution!";
     longDescription = ''
       This is a collection of extension:color mappings, suitable to use as your
