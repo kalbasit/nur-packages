@@ -12,7 +12,8 @@ let
   lib = import ./lib { inherit pkgs; }; # functions
   modules = import ./modules; # NixOS modules
   overlays = import ./overlays; # nixpkgs overlays
-in {
+in
+{
   inherit lib modules overlays;
 
   # example-package = pkgs.callPackage ./pkgs/example-package { };
