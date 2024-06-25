@@ -14,7 +14,16 @@
   modules = import ./modules; # NixOS modules
   overlays = import ./overlays; # nixpkgs overlays
 
-  example-package = pkgs.callPackage ./pkgs/example-package { };
+  chroot-enter = pkgs.callPackage ./pkgs/chroot-enter { };
+  download-archiver = pkgs.callPackage ./pkgs/download-archiver { };
+  gpg-clean-up = pkgs.callPackage ./pkgs/gpg-clean-up { };
+  ls-colors = pkgs.callPackage ./pkgs/ls-colors { };
+  nix-verify = pkgs.callPackage ./pkgs/nix-verify { };
+  nixify = pkgs.callPackage ./pkgs/nixify { };
+  rbrowser = pkgs.callPackage ./pkgs/rbrowser { };
+  shrinkpdf = pkgs.callPackage ./pkgs/shrinkpdf { };
+  swm = pkgs.callPackage ./pkgs/swm { };
+
   # some-qt5-package = pkgs.libsForQt5.callPackage ./pkgs/some-qt5-package { };
   # ...
 }
